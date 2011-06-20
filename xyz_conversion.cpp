@@ -45,7 +45,7 @@ int main () {
   string line;
   ifstream myfile ("xyzfile.txt");
   if (myfile.is_open())
-  {
+  
     int counter = 0;
     while ( myfile.good() )
     {
@@ -75,7 +75,7 @@ int main () {
   }
 
   else cout << "Unable to open file"; 
-  count << "derp" << endl;
+  cout << "derp" << endl;
 
   for (int i = 0; i < hold.size(); i++)
   {
