@@ -44,9 +44,9 @@ int main () {
   vector <carbon> carbons;
   string line;
   ifstream myfile ("xyzfile.txt");
+  int counter = 0;
   if (myfile.is_open())
   {
-    int counter = 0;
     while ( myfile.good() )
     {
       counter += 1;
@@ -71,11 +71,12 @@ int main () {
       hold.push_back(line);
       cout << line << endl;
     }
+    cout << "Made it" << endl;
     myfile.close();
   }
 
   else cout << "Unable to open file"; 
-  count << "derp" << endl;
+  cout << "derp" << endl;
 
   for (int i = 0; i < hold.size(); i++)
   {

@@ -1,5 +1,8 @@
-import random
 
+# Code © Spencer Krum June 2011
+# Released underl GPLv3 See LICENSE file in this repository
+
+import random
 def find_Lowest_Three(list_of_tuples):
     lowest = list_of_tuples[0]
     for distance, index in list_of_tuples:
