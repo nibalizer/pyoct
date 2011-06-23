@@ -29,9 +29,9 @@ using namespace std;
 
 struct carbon
 {
-  string xval;
-  string yval;
-  string zval;
+  float xval;
+  float yval;
+  float zval;
   int index;
   int neighbor_1;
   int neighbor_2;
@@ -62,16 +62,21 @@ int main () {
       }
       
       carbon thiscarbon;
-      thiscarbon.xval=tokens[1];
-      thiscarbon.yval=tokens[2];
-      thiscarbon.zval=tokens[3];
+      cout << tokens[1] << endl;
+      cout << atof(tokens[2].c_str()) << endl;
+      cout << atof(tokens[3].c_str()) << endl;
+      float tok_1 = atof(tokens[1].c_str());
+      float tok_2 = atof(tokens[2].c_str());
+      float tok_3 = atof(tokens[3].c_str());
+      thiscarbon.xval = tok_1;
+      thiscarbon.yval = tok_2;
+      thiscarbon.zval = tok_3;
       thiscarbon.index = counter;
       carbons.push_back(thiscarbon);
      
       hold.push_back(line);
       cout << line << endl;
     }
-    cout << "Made it" << endl;
     myfile.close();
   }
 
