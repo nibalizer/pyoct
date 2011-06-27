@@ -16,18 +16,20 @@ for i,line in enumerate(p):
     if i % 100 == 0:
         print i, line
     letter, x, y, z = line.split('\t')
-    carbons.append([i, float(x), float(y), float(z)])
+    carbons.append([i, float(x), float(y), float(z), 0, 0 ,0])
 
 bond_len_max = 2
+del p
 
+carbons = np.array(carbons)
 def within_range(c1,c2):
-    result = True
     for a,b in zip(c1,c2)[1:]:
-        result = result and (b <= a + bond_len_max and b >= a - bond_len_max)
-    return result
+        if not (b <= a + bond_len_max and b >= a - bond_len_max):
+            return False
+    return True
 
 def distance_formula(c1,c2):
-    dist = np.sqrt((c2[1] - c1[1])**2 + (c2[2] - c1[2])**2 + (c2[3] - c1[3])**2)
+    dist = (c2[1] - c1[1])**2 + (c2[2] - c1[2])**2 + (c2[3] - c1[3])**2
     return dist
 
 for carbon in carbons:
@@ -43,8 +45,9 @@ for carbon in carbons:
         distance.append((distance_formula(carbon, close_carbon),close_carbon))
         print close_carbon
     distance.sort()
-    for distance, close_carbon in distance[1:4]:
-        carbon.append(close_carbon[0])
+    for index, (distance, close_carbon) in enumerate(distance[1:4]):
+        carbon[-index] = close_carbon[0]
+        
 
 for carbon in carbons:
     print ",".join(map(str,carbon))
