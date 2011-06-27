@@ -44,7 +44,7 @@ maxx = max(new_xs)
 maxy = max(new_ys)
 maxz = max(new_zs)
 
-size = sys.maxint /10000
+size = 1000000
 
 factor_x = size / maxx
 factor_y = size / maxy
