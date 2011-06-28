@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 #python octree implementation
 # Code © Spencer Krum June 2011
 # Released underl GPLv3 See LICENSE file in this repository
@@ -79,7 +81,7 @@ class node():
                         Ylowerlimit = self.Ylowerlimit
                         Zlowerlimit = self.Zcenter
                         self.negXnegYposZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.negXnegYposZ.add(payload, coord, level)
                 else:
                     #posY
                     if coord[2] <= self.Zcenter:
@@ -91,7 +93,7 @@ class node():
                         Ylowerlimit = self.Ycenter
                         Zlowerlimit = self.Zlowerlimit
                         self.negXposYnegZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.negXposYnegZ.add(payload, coord, level)
 
                     else:
                         #posZ
@@ -102,7 +104,7 @@ class node():
                         Ylowerlimit = self.Ycenter
                         Zlowerlimit = self.Zcenter
                         self.negXposYposZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.negXposYposZ.add(payload, coord, level)
 
 
             else:
@@ -118,7 +120,7 @@ class node():
                         Ylowerlimit = self.Ylowerlimit
                         Zlowerlimit = self.Zlowerlimit
                         self.posXnegYnegZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.posXnegYnegZ.add(payload, coord, level)
 
                     else:
                         #posZ
@@ -129,7 +131,7 @@ class node():
                         Ylowerlimit = self.Ylowerlimit
                         Zlowerlimit = self.Zcenter
                         self.posXnegYposZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.posXnegYposZ.add(payload, coord, level)
 
                 else:
                     #posY
@@ -142,7 +144,7 @@ class node():
                         Ylowerlimit = self.Ycenter
                         Zlowerlimit = self.Zlowerlimit
                         self.posXposYnegZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.posXposYnegZ.add(payload, coord, level)
 
                     else:
                         #posZ
@@ -153,7 +155,7 @@ class node():
                         Ylowerlimit = self.Ycenter
                         Zlowerlimit = self.Zcenter
                         self.posXposYposZ = node(self.negXnegYnegZ, Xupperlimit, Yupperlimit, Zupperlimit, Xlowerlimit, Ylowerlimit, Zlowerlimit)
-                        self.negXnegYnegZ.add(payload, coord, level)
+                        self.posXposYposZ.add(payload, coord, level)
 
 
         
@@ -189,6 +191,12 @@ class octree():
 
 
 
+if __name__ == "__main__":
+    print "Creating octree"
+    tree = octree(100,100,100, -100, -100, -100)
+    print "inserting node"
+    tree.add_item("derp", (10.34251,10.1234,10.9876))
+    print "Great success"
 
 
 
