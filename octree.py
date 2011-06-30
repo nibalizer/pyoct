@@ -17,9 +17,9 @@ class node():
         self.Xlowerlimit = Xlowerlimit
         self.Ylowerlimit = Ylowerlimit
         self.Zlowerlimit = Zlowerlimit
-        self.Xcenter = self.Xlowerlimit - self.Xupperlimit
-        self.Ycenter = self.Ylowerlimit - self.Yupperlimit
-        self.Zcenter = self.Zlowerlimit - self.Xupperlimit
+        self.Xcenter = (self.Xupperlimit + self.Xlowerlimit)/2.
+        self.Ycenter = (self.Yupperlimit + self.Ylowerlimit)/2.
+        self.Zcenter = (self.Zupperlimit + self.Xlowerlimit)/2.
 
     parent = None
     value = None
@@ -42,6 +42,36 @@ class node():
     Xlowerlimit = None
     Ylowerlimit = None
     Zlowerlimit = None
+    def print_info(self):
+        """
+        helper function to dump node paramaters
+        """
+
+        print "parent:\t {0}".format(self.parent)
+        print "value:\t {0}".format(self.value)
+        
+        #children
+        print "posXposYposZ: \t {0}".format(self.posXposYposZ)
+        print "posXposYnegz: \t {0}".format(self.posXposYnegZ)
+        print "posXnegYposZ: \t {0}".format(self.posXnegYposZ)
+        print "posXposYnegZ: \t {0}".format(self.posXposYnegZ)
+        print "negXposYposZ: \t {0}".format(self.negXposYposZ)
+        print "negXposYnegZ: \t {0}".format(self.negXposYnegZ)
+        print "negXnegYposZ: \t {0}".format(self.negXnegYposZ)
+        print "negXnegYnegZ: \t {0}".format(self.negXnegYnegZ) 
+
+        #position in space
+        print "Xupperlimit: \t {0}".format(self.Xupperlimit)
+        print "Yupperlimit: \t {0}".format(self.Yupperlimit)
+        print "Zupperlimit: \t {0}".format(self.Zupperlimit)
+        
+        print "Xlowerlimit: \t {0}".format(self.Xlowerlimit)
+        print "Ylowerlimit: \t {0}".format(self.Ylowerlimit)
+        print "Zlowerlimit: \t {0}".format(self.Zlowerlimit)
+
+        print "Xcenter: \t {0}".format(self.Xcenter)
+        print "Ycenter: \t {0}".format(self.Ycenter)
+        print "Zcenter: \t {0}".format(self.Zcenter)
 
     def add(self, payload, coord, level):
         
@@ -189,6 +219,26 @@ class octree():
         self.root.add(payload, coord, self.maxiter)
         
 
+def find_closest_three(x, y, z, tree):
+    """
+    function to find the closest three data points to
+    a given data point
+    """
+    #brief sanity checking
+    if (x >= tree.Xmax or x <= tree.Xmin):
+        print "Fail, out of range"
+    if (y >= tree.Ymax or y <= tree.Ymin):
+        print "Fail, out of range"
+    if (z >= tree.Zmax or z <= tree.Zmin):
+        print "Fail, out of range"
+
+    #find the node by coords
+    for level in range(tree.maxiter):
+        pass
+
+
+
+    
 
 
 if __name__ == "__main__":
@@ -197,7 +247,8 @@ if __name__ == "__main__":
     print "inserting node"
     tree.add_item("derp", (10.34251,10.1234,10.9876))
     print "Great success"
-
-
+    
+    #get some data
+    tree.root.print_info()
 
 
