@@ -34,6 +34,9 @@ class node():
     negXnegYposZ = None
     negXnegYnegZ = None
 
+    #array of children
+    chidren = [posXposYposZ,posXposYnegZ,posXnegYposZ,posXposYnegZ,negXposYposZ,negXposYnegZ,negXnegYposZ,negXnegYnegZ]
+
     #position in space
     Xupperlimit = None
     Yupperlimit = None
@@ -42,6 +45,28 @@ class node():
     Xlowerlimit = None
     Ylowerlimit = None
     Zlowerlimit = None
+    def get_array_of_children(self):
+        """
+        helper function to return array of children
+        because there is some weird issue where just setting an 
+        array variable isn't cutting it
+        """
+        children = [self.posXposYposZ,self.posXposYnegZ,self.posXnegYposZ,self.posXposYnegZ,self.negXposYposZ,self.negXposYnegZ,self.negXnegYposZ,self.negXnegYnegZ ]        
+        return children
+
+    def print_types(self):
+        """
+        helper function to printout types of children
+        I know, terribly unpythonic of me, rabble rabble
+        """
+        print type(self.posXposYposZ)
+        print type(self.posXposYnegZ)
+        print type(self.posXnegYposZ)
+        print type(self.posXposYnegZ)
+        print type(self.negXposYposZ)
+        print type(self.negXposYnegZ)
+        print type(self.negXnegYposZ)
+        print type(self.negXnegYnegZ)
     def print_info(self):
         """
         helper function to dump node paramaters
@@ -213,7 +238,8 @@ class octree():
 
     def add_item(self, payload, coord):
         """
-        Create a subnode
+        Create recursively create subnodes until maxiter is reached
+        then deposit payload in that node
         """
 
         self.root.add(payload, coord, self.maxiter)
@@ -250,5 +276,14 @@ if __name__ == "__main__":
     
     #get some data
     tree.root.print_info()
+    for child in tree.root.chidren:
+        print type(child)
+    tree.root.print_types()
+    for child in tree.root.get_array_of_children():
+        try:
+            grandchild = child.get_array_of_children()
+        except AttributeError:
+            print type(child)
+
 
 
