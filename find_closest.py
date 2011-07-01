@@ -25,8 +25,6 @@ carbons = np.array(carbons)
 def within_range(c1,c2):
     for a,b in zip(c1,c2)[1:]:
         if not (b <= a + bond_len_max and b >= a - bond_len_max):
-            return False
-    return True
 
 def distance_formula(c1,c2):
     dist = (c2[1] - c1[1])**2 + (c2[2] - c1[2])**2 + (c2[3] - c1[3])**2
@@ -36,7 +34,10 @@ for carbon in carbons:
     close = []
     print "Finding Closest"
     for carbon_1 in carbons:
-        if within_range(carbon, carbon_1):
+        for a,b in zip(carbon,carbon_1):
+            if not (b <= a + bond_len_max and b >= a - bond_len_max):
+               break
+        else:
             close.append(carbon_1)
             print carbon_1
     distance = []
