@@ -464,7 +464,9 @@ class Octree():
                     list_list[level+1] = temp_templist
              
 
-            return list_list[-1]
+            payloads = [i.value for i in list_list[-1]]
+            return payloads
+
                 
         
 
@@ -517,10 +519,6 @@ if __name__ == "__main__":
     entries = tree.find_within_range((0,0,0), 40, "cube")
     for i in entries:
         print i
-        print i.value
-        print i.Xcenter
-        print i.Ycenter
-        print i.Zcenter
 
 
 
