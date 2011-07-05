@@ -263,7 +263,7 @@ class octree():
 
             Let me put it 2 dimensions with ascii art:
 
-            Fig1. A Quadtree Node Space
+            Fig1. A Quadtree Node Space with children space labeled 
 
             1,-1--------1,0--------1,1
             |           |           |
@@ -289,11 +289,104 @@ class octree():
              
             Children _2, _3, _4 are much the same
 
+            Fig2. Quadtree Node Space with superimposed search space 
+
+
+            /-----------------------\ 
+            |           |           |
+            |           |           |
+            |     |-------|         |
+            |-----|-------|---------| 
+            |     |     | |         |
+            |     |-------|         | 
+            |           |           |
+            \-----------------------/  
+
+
+            Fig3. Fig2 Zoomed
+
+            /---------------------------------------------------------------\
+            |                                                ||   <child_1> |
+            |    <child_4>                                   ||  <point A>  |
+            |                                                ||        |    |
+            |                <selection space>               ||        V    |
+            |    0+++++++++++++++++++++++++++++++++++++++++++++++++++++0    |
+            |    +                                           ||<exact  +    |
+            |    +                             <x-axis>      || center>+    |
+            |====+===========================================%%========+====|
+            |    +                                           ||        +    |
+            |    +                                           ||        +    |
+            |    +                                           ||        +    |
+            |    +                                          ^||        +    |
+            |    +                                          y||        +    |
+            |    +                                          -||        +    |
+            |    +                                          a||        +    |
+            |    +                                          x||        +    |
+            |    +                                          i||        +    |
+            |    +                                          s||        +    |
+            |    +                                          v||        +    |
+            |    +                                           ||        +    |
+            |    +                                           ||        +    |
+            |    0+++++++++++++++++++++++++++++++++++++++++++++++++++++0    |
+            |             <child_3>                          ||   <child_2> |
+            \---------------------------------------------------------------/
+
+
+            Fig4. Quadtree Node Space with different superimposed search space 
+
+
+            /-----------------------\ 
+            |           |           |
+            |           |           |
+            |     |---| |           |
+            |-----|---|-------------| 
+            |     |   | |           |
+            |     |---| |           | 
+            |           |           |
+            \-----------------------/  
+
+
+            Fig5. Fig2 Zoomed
+
+            /---------------------------------------------------------------\
+            |                                                ||             |
+            |    <child_4>                                   ||  <child_1>  |
+            |                                    <point B>   ||             |
+            |                <selection space>   |           ||             |
+            |    0+++++++++++++++++++++++++++0 <--           ||             |
+            |    +                           +               ||<exact       |
+            |    +                           + <x-axis>      || center>     |
+            |====+===========================+===============%%=============|
+            |    +                           +               ||             |
+            |    +                           +               ||             |
+            |    +                           +               ||             |
+            |    +                           +              ^||             |
+            |    +                           +              y||             |
+            |    +                           +              -||             |
+            |    +                           +              a||             |
+            |    +                           +              x||             |
+            |    +                           +              i||             |
+            |    +                           +              s||             |
+            |    +                           +              v||             |
+            |    +                           +               ||             |
+            |    +                           +               ||             |
+            |    0+++++++++++++++++++++++++++0               ||             |
+            |             <child_3>                          ||   <child_2> |
+            \---------------------------------------------------------------/
 
 
 
+            What we see in Fig2/3 vs Figi4/5 is illustrated by point A, point B
+            Points A, B are the points that are the most positive in both X and
+            Y. We see that if and only if this 'upper rightmost' point is within 
+            child 1, then there is space in the selection overlapping part of 
+            child 1. This also follows for children_2, _3, _4 and generalizes to
+            the 3D space of the octree. 
 
-
+            So our litmus test for 'does the selection overlap with a
+            childspace?' is whether or not the most extreme(bad wording I know) 
+            part of that selection is within the childspace. 
+            
             """
             Xedge_max = self.center[0] + size
             Xedge_min = self.center[0] - size
