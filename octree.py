@@ -98,6 +98,7 @@ class node():
         print "Ycenter: \t {0}".format(self.Ycenter)
         print "Zcenter: \t {0}".format(self.Zcenter)
 
+            
     def add(self, payload, coord, level):
         
         """
@@ -105,10 +106,7 @@ class node():
         """
 
         if level == 0:
-            self.value = payload
-            self.Xcenter = coord[0]
-            self.Ycenter = coord[1]
-            self.Zcenter = coord[2]
+            self.value.append((coord,payload))
 
         else:
             level -= 1
@@ -243,6 +241,104 @@ class octree():
         """
 
         self.root.add(payload, coord, self.maxiter)
+
+    def find_within_range(self, center, size, shape):
+        """
+        Return payloads and coordinates of every payload within
+        a specified area
+        """
+        if shape == "box":
+            """
+            This deals with things around the center of a node in a box shape
+            with a radius of 'size'
+            It would be totally good to make a spere search space
+            """
+            """
+            It works by making the (correct I think) assumption that the box
+            shape has 8 vertices. To determine the overlap between the search
+            space and the node area is hard. We can start by identifying which 
+            of the 8 children of the current node overlap with the search space.
+            The assumption is that if the search box overlaps in any part with
+            a child, then the most extreme vertex will be within the child. 
+
+            Let me put it 2 dimensions with ascii art:
+
+            Fig1. A Quadtree Node Space
+
+            1,-1--------1,0--------1,1
+            |           |           |
+            |  child_4  |  child_1  |
+            |           |           |
+           -1,0---------0,0--------1,0
+            |           |           |
+            |  child_3  |  child_2  | 
+            |           |           |
+          (-1,-1)-----(-1,0)-----(-1,1)
+
+            
+            The four children of this node are:
+
+            child_1 has the following attributes 
+
+            . node name is posXposY
+            . initial value is Null
+            . Once recursively filled out, its value is another node
+            . it represents the rectangular area between ((0,0),(1,0)) and ((1,0), (1,1))
+            . its center is at the center of the rectangular area it represents
+
+             
+            Children _2, _3, _4 are much the same
+
+
+
+
+
+
+            """
+            Xedge_max = self.center[0] + size
+            Xedge_min = self.center[0] - size
+            Yedge_max = self.center[1] + size
+            Yedge_min = self.center[1] - size
+            Zedge_max = self.center[2] + size
+            Zedge_min = self.center[2] - size
+
+            corner1 = (Xedge_max, Yedge_max, Zedge_max)
+            corner2 = (Xedge_max, Yedge_max, Zedge_min)
+            corner3 = (Xedge_max, Yedge_min, Zedge_max)
+            corner4 = (Xedge_max, Yedge_min, Zedge_min)
+            corner5 = (Xedge_min, Yedge_max, Zedge_max)
+            corner6 = (Xedge_min, Yedge_max, Zedge_min)
+            corner7 = (Xedge_min, Yedge_min, Zedge_max)
+            corner8 = (Xedge_min, Yedge_min, Zedge_min)
+            corners = [corner1, corner2, corner3, corner4, corner5, corner6, corner7, corner8]
+            
+            investigating = []
+            for node in [self.root]:
+                table = ((corner1[0] > self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] > self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.posXposYposZ)
+                table = ((corner2[0] > self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] < self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.posXposYnegZ)
+                table = ((corner3[0] > self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] > self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.posXnegYposZ)
+                table = ((corner4[0] > self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] < self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.posXnegYnegZ)
+                table = ((corner5[0] < self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] > self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.negXposYposZ)
+                table = ((corner6[0] < self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] < self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.negXposYnegZ)
+                table = ((corner7[0] < self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] > self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.negXnegYposZ)
+                table = ((corner8[0] < self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] < self.root.center[2]))
+                if not False in table:
+                    investigating.append(self.root.negXnegYnegZ)
+
         
 
 def find_closest_three(x, y, z, tree):
