@@ -28,14 +28,14 @@ class node():
     posXposYposZ = None
     posXposYnegZ = None
     posXnegYposZ = None
-    posXposYnegZ = None
+    posXnegYnegZ = None
     negXposYposZ = None
     negXposYnegZ = None
     negXnegYposZ = None
     negXnegYnegZ = None
 
     #array of children
-    chidren = [posXposYposZ,posXposYnegZ,posXnegYposZ,posXposYnegZ,negXposYposZ,negXposYnegZ,negXnegYposZ,negXnegYnegZ]
+    chidren = [posXposYposZ,posXposYnegZ,posXnegYposZ,posXnegYnegZ,negXposYposZ,negXposYnegZ,negXnegYposZ,negXnegYnegZ]
 
     #position in space
     Xupperlimit = None
@@ -62,7 +62,7 @@ class node():
         print type(self.posXposYposZ)
         print type(self.posXposYnegZ)
         print type(self.posXnegYposZ)
-        print type(self.posXposYnegZ)
+        print type(self.posXnegYnegZ)
         print type(self.negXposYposZ)
         print type(self.negXposYnegZ)
         print type(self.negXnegYposZ)
@@ -79,7 +79,7 @@ class node():
         print "posXposYposZ: \t {0}".format(self.posXposYposZ)
         print "posXposYnegz: \t {0}".format(self.posXposYnegZ)
         print "posXnegYposZ: \t {0}".format(self.posXnegYposZ)
-        print "posXposYnegZ: \t {0}".format(self.posXposYnegZ)
+        print "posXnegYnegZ: \t {0}".format(self.posXnegYnegZ)
         print "negXposYposZ: \t {0}".format(self.negXposYposZ)
         print "negXposYnegZ: \t {0}".format(self.negXposYnegZ)
         print "negXnegYposZ: \t {0}".format(self.negXnegYposZ)
@@ -397,14 +397,18 @@ class Octree():
             
             """
             
+            payloads = []
+
+            for level in range(maxiter):
+
             investigating = []
             for node in [self.root]:
-                Xedge_max = node.Xcenter + size
-                Xedge_min = node.Xcenter - size
-                Yedge_max = node.Ycenter + size
-                Yedge_min = node.Ycenter - size
-                Zedge_max = node.Zcenter + size
-                Zedge_min = node.Zcenter - size
+                Xedge_max = center[0] + size
+                Xedge_min = center[0] - size
+                Yedge_max = center[1] + size
+                Yedge_min = center[1] - size
+                Zedge_max = center[2] + size
+                Zedge_min = center[2] - size
 
                 corner0 = (Xedge_max, Yedge_max, Zedge_max)
                 corner1 = (Xedge_max, Yedge_max, Zedge_min)
@@ -415,19 +419,103 @@ class Octree():
                 corner6 = (Xedge_min, Yedge_min, Zedge_max)
                 corner7 = (Xedge_min, Yedge_min, Zedge_min)
                 corners = [corner0, corner1, corner2, corner3, corner4, corner5, corner6, corner7]
-                for index, corner in enumerate(corners):
-                    table = ((corner[0] > node.Xcenter),(corner[1] > node.Ycenter) ,(corner[2] > node.Zcenter))
-                    if not False in table:
-                        print "foo"
-                        investigating.append(node.get_array_of_children()[index])
+                table = ((corner0[0] > node.Xcenter),(corner0[1] > node.Ycenter) ,(corner0[2] > node.Zcenter))
+                if not False in table:
+                    investigating.append(node.posXposYposZ)
+                table = ((corner1[0] > node.Xcenter),(corner1[1] > node.Ycenter) ,(corner1[2] < node.Zcenter))
+                if not False in table:
+                    investigating.append(node.posXposYnegZ)
+                table = ((corner2[0] > node.Xcenter),(corner2[1] < node.Ycenter) ,(corner2[2] > node.Zcenter))
+                if not False in table:
+                    investigating.append(node.posXnegYposZ)
+                table = ((corner3[0] > node.Xcenter),(corner3[1] < node.Ycenter) ,(corner3[2] < node.Zcenter))
+                if not False in table:
+                    investigating.append(node.posXnegYnegZ)
+                table = ((corner4[0] < node.Xcenter),(corner4[1] > node.Ycenter) ,(corner4[2] > node.Zcenter))
+                if not False in table:
+                    investigating.append(node.negXposYposZ)
+                table = ((corner5[0] < node.Xcenter),(corner5[1] > node.Ycenter) ,(corner5[2] < node.Zcenter))
+                if not False in table:
+                    investigating.append(node.negXposYnegZ)
+                table = ((corner6[0] < node.Xcenter),(corner6[1] < node.Ycenter) ,(corner6[2] > node.Zcenter))
+                if not False in table:
+                    investigating.append(node.negXnegYposZ)
+                table = ((corner7[0] < node.Xcenter),(corner7[1] < node.Ycenter) ,(corner7[2] < node.Zcenter))
+                if not False in table:
+                    investigating.append(node.negXnegYnegZ)
 
 
             for found in investigating:
                 print found
 
+            #must remove children that aren't real yet
+            my_investigating = []
+            for node in investigating:
+                try:
+                   print node.Xcenter  
+                   my_investigating.append(node)
+                except AttributeError:
+                    print "Not adding this one"
+
+
+            
+            now_investigating = []
+            for node in my_investigating:
+                Xedge_max = center[0] + size
+                Xedge_min = center[0] - size
+                Yedge_max = center[1] + size
+                Yedge_min = center[1] - size
+                Zedge_max = center[2] + size
+                Zedge_min = center[2] - size
+
+                corner0 = (Xedge_max, Yedge_max, Zedge_max)
+                corner1 = (Xedge_max, Yedge_max, Zedge_min)
+                corner2 = (Xedge_max, Yedge_min, Zedge_max)
+                corner3 = (Xedge_max, Yedge_min, Zedge_min)
+                corner4 = (Xedge_min, Yedge_max, Zedge_max)
+                corner5 = (Xedge_min, Yedge_max, Zedge_min)
+                corner6 = (Xedge_min, Yedge_min, Zedge_max)
+                corner7 = (Xedge_min, Yedge_min, Zedge_min)
+                corners = [corner0, corner1, corner2, corner3, corner4, corner5, corner6, corner7]
+                table = ((corner0[0] > node.Xcenter),(corner0[1] > node.Ycenter) ,(corner0[2] > node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.posXposYposZ)
+                table = ((corner1[0] > node.Xcenter),(corner1[1] > node.Ycenter) ,(corner1[2] < node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.posXposYnegZ)
+                table = ((corner2[0] > node.Xcenter),(corner2[1] < node.Ycenter) ,(corner2[2] > node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.posXnegYposZ)
+                table = ((corner3[0] > node.Xcenter),(corner3[1] < node.Ycenter) ,(corner3[2] < node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.posXnegYnegZ)
+                table = ((corner4[0] < node.Xcenter),(corner4[1] > node.Ycenter) ,(corner4[2] > node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.negXposYposZ)
+                table = ((corner5[0] < node.Xcenter),(corner5[1] > node.Ycenter) ,(corner5[2] < node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.negXposYnegZ)
+                table = ((corner6[0] < node.Xcenter),(corner6[1] < node.Ycenter) ,(corner6[2] > node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.negXnegYposZ)
+                table = ((corner7[0] < node.Xcenter),(corner7[1] < node.Ycenter) ,(corner7[2] < node.Zcenter))
+                if not False in table:
+                    now_investigating.append(node.negXnegYnegZ)
 
 
 
+            my_new_investigating = []
+            for node in now_investigating:
+                try:
+                   print node.Xcenter  
+                   my_new_investigating.append(node)
+                except AttributeError:
+                    print "Not adding this one"
+
+
+            print "OHAI"
+            for found in my_new_investigating:
+                print found
 
         
 
@@ -458,6 +546,15 @@ if __name__ == "__main__":
     tree = Octree(100,100,100, -100, -100, -100)
     print "inserting node"
     tree.add_item("derp", (10.34251,10.1234,10.9876))
+    print "Great success"
+    print "inserting node"
+    tree.add_item("derp", (-10.34251,10.1234,10.9876))
+    print "Great success"
+    print "inserting node"
+    tree.add_item("derp", (10.34251,-10.1234,10.9876))
+    print "Great success"
+    print "inserting node"
+    tree.add_item("derp", (10.34251,10.1234,-10.9876))
     print "Great success"
     
     #get some data
