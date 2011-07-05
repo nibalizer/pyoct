@@ -22,7 +22,7 @@ class node():
         self.Zcenter = (self.Zupperlimit + self.Xlowerlimit)/2.
 
     parent = None
-    value = []
+    value = None
     
     #children
     posXposYposZ = None
@@ -106,7 +106,11 @@ class node():
         """
 
         if level == 0:
-            self.value.append((coord,payload))
+            try:
+                self.value.append((coord,payload))
+            except AttributeError:
+                self.value = []
+                self.value.append((coord,payload))
 
         else:
             level -= 1
@@ -459,8 +463,8 @@ class Octree():
                             pass
                     list_list[level+1] = temp_templist
              
-            for i in list_list[-1]:
-                print i.value
+
+            return list_list[-1]
                 
         
 
@@ -494,6 +498,9 @@ if __name__ == "__main__":
     print "Creating octree"
     tree = Octree(100,100,100, -100, -100, -100)
     print "inserting node"
+    tree.add_item("derp", (90.34251,10.1234,10.9876))
+    print "Great success"
+    print "inserting node"
     tree.add_item("derp", (10.34251,10.1234,10.9876))
     print "Great success"
     print "inserting node"
@@ -516,7 +523,14 @@ if __name__ == "__main__":
             grandchild = child.get_array_of_children()
         except AttributeError:
             print type(child)
-    tree.find_within_range((0,0,0), 40, "cube")
+    entries = tree.find_within_range((0,0,0), 40, "cube")
+    for i in entries:
+        print i
+        print i.value
+        print i.Xcenter
+        print i.Ycenter
+        print i.Zcenter
+
 
 
 
