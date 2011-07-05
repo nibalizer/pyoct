@@ -17,7 +17,7 @@ p = Octree(Arguments)
 
 p.add(thing)
 
-p.find_within_range(area, space)
+things_close = p.find_within_range(area, space)
 
 ### Particulars
 
@@ -72,7 +72,7 @@ tree.add_item("derp", (10.34251,10.1234,10.9876))
 print "Great success"
 results = tree.find_within_range((0,0,0), 50, "cube")
 for result in results:
-    print result
+    print result.value
 </pre>
 
 ## License
