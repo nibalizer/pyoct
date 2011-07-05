@@ -217,7 +217,7 @@ class node():
             
 
 
-class octree():
+class Octree():
     """
     class to hold the whole tree
     """
@@ -247,7 +247,15 @@ class octree():
         Return payloads and coordinates of every payload within
         a specified area
         """
-        if shape == "box":
+        """
+        When shape is cube: 
+        Search space is defined as the cubic region where each face is 'size'
+        distance directly away from the center. 
+        """
+        """
+        Should support "cube", "sphere", "doughnut"
+        """"
+        if shape == "cube"":
             """
             This deals with things around the center of a node in a box shape
             with a radius of 'size'
@@ -458,7 +466,7 @@ def find_closest_three(x, y, z, tree):
 
 if __name__ == "__main__":
     print "Creating octree"
-    tree = octree(100,100,100, -100, -100, -100)
+    tree = Octree(100,100,100, -100, -100, -100)
     print "inserting node"
     tree.add_item("derp", (10.34251,10.1234,10.9876))
     print "Great success"
