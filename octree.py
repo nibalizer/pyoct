@@ -514,15 +514,6 @@ if __name__ == "__main__":
     print "Great success"
     
     #get some data
-    tree.root.print_info()
-    for child in tree.root.chidren:
-        print type(child)
-    tree.root.print_types()
-    for child in tree.root.get_array_of_children():
-        try:
-            grandchild = child.get_array_of_children()
-        except AttributeError:
-            print type(child)
     entries = tree.find_within_range((0,0,0), 40, "cube")
     for i in entries:
         print i
