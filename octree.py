@@ -398,10 +398,15 @@ class Octree():
             """
             
             payloads = []
-            templist = []
-            for level in range(maxiter):
-                investigating = []
-                for node in [self.root]:
+            templist = [self.root]
+            list_list = []
+            list_list.append([self.root])
+            for level in range(self.maxiter):
+                list_list.append([])
+
+            print list_list
+            for level in range(self.maxiter):
+                for node in list_list[level]:
                     Xedge_max = center[0] + size
                     Xedge_min = center[0] - size
                     Yedge_max = center[1] + size
@@ -420,101 +425,46 @@ class Octree():
                     corners = [corner0, corner1, corner2, corner3, corner4, corner5, corner6, corner7]
                     table = ((corner0[0] > node.Xcenter),(corner0[1] > node.Ycenter) ,(corner0[2] > node.Zcenter))
                     if not False in table:
-                        investigating.append(node.posXposYposZ)
+                        list_list[level+1].append(node.posXposYposZ)
                     table = ((corner1[0] > node.Xcenter),(corner1[1] > node.Ycenter) ,(corner1[2] < node.Zcenter))
                     if not False in table:
-                        investigating.append(node.posXposYnegZ)
+                        list_list[level+1].append(node.posXposYnegZ)
                     table = ((corner2[0] > node.Xcenter),(corner2[1] < node.Ycenter) ,(corner2[2] > node.Zcenter))
                     if not False in table:
-                        investigating.append(node.posXnegYposZ)
+                        list_list[level+1].append(node.posXnegYposZ)
                     table = ((corner3[0] > node.Xcenter),(corner3[1] < node.Ycenter) ,(corner3[2] < node.Zcenter))
                     if not False in table:
-                        investigating.append(node.posXnegYnegZ)
+                        list_list[level+1].append(node.posXnegYnegZ)
                     table = ((corner4[0] < node.Xcenter),(corner4[1] > node.Ycenter) ,(corner4[2] > node.Zcenter))
                     if not False in table:
-                        investigating.append(node.negXposYposZ)
+                        list_list[level+1].append(node.negXposYposZ)
                     table = ((corner5[0] < node.Xcenter),(corner5[1] > node.Ycenter) ,(corner5[2] < node.Zcenter))
                     if not False in table:
-                        investigating.append(node.negXposYnegZ)
+                        list_list[level+1].append(node.negXposYnegZ)
                     table = ((corner6[0] < node.Xcenter),(corner6[1] < node.Ycenter) ,(corner6[2] > node.Zcenter))
                     if not False in table:
-                        investigating.append(node.negXnegYposZ)
+                        list_list[level+1].append(node.negXnegYposZ)
                     table = ((corner7[0] < node.Xcenter),(corner7[1] < node.Ycenter) ,(corner7[2] < node.Zcenter))
                     if not False in table:
-                        investigating.append(node.negXnegYnegZ)
+                        list_list[level+1].append(node.negXnegYnegZ)
 
 
-                for found in investigating:
-                    print found
-
-                #must remove children that aren't real yet
-                my_investigating = []
-                for node in investigating:
-                    try:
-                       print node.Xcenter  
-                       my_investigating.append(node)
-                    except AttributeError:
-                        print "Not adding this one"
-
-
-            
-            now_investigating = []
-            for node in my_investigating:
-                Xedge_max = center[0] + size
-                Xedge_min = center[0] - size
-                Yedge_max = center[1] + size
-                Yedge_min = center[1] - size
-                Zedge_max = center[2] + size
-                Zedge_min = center[2] - size
-
-                corner0 = (Xedge_max, Yedge_max, Zedge_max)
-                corner1 = (Xedge_max, Yedge_max, Zedge_min)
-                corner2 = (Xedge_max, Yedge_min, Zedge_max)
-                corner3 = (Xedge_max, Yedge_min, Zedge_min)
-                corner4 = (Xedge_min, Yedge_max, Zedge_max)
-                corner5 = (Xedge_min, Yedge_max, Zedge_min)
-                corner6 = (Xedge_min, Yedge_min, Zedge_max)
-                corner7 = (Xedge_min, Yedge_min, Zedge_min)
-                corners = [corner0, corner1, corner2, corner3, corner4, corner5, corner6, corner7]
-                table = ((corner0[0] > node.Xcenter),(corner0[1] > node.Ycenter) ,(corner0[2] > node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.posXposYposZ)
-                table = ((corner1[0] > node.Xcenter),(corner1[1] > node.Ycenter) ,(corner1[2] < node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.posXposYnegZ)
-                table = ((corner2[0] > node.Xcenter),(corner2[1] < node.Ycenter) ,(corner2[2] > node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.posXnegYposZ)
-                table = ((corner3[0] > node.Xcenter),(corner3[1] < node.Ycenter) ,(corner3[2] < node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.posXnegYnegZ)
-                table = ((corner4[0] < node.Xcenter),(corner4[1] > node.Ycenter) ,(corner4[2] > node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.negXposYposZ)
-                table = ((corner5[0] < node.Xcenter),(corner5[1] > node.Ycenter) ,(corner5[2] < node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.negXposYnegZ)
-                table = ((corner6[0] < node.Xcenter),(corner6[1] < node.Ycenter) ,(corner6[2] > node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.negXnegYposZ)
-                table = ((corner7[0] < node.Xcenter),(corner7[1] < node.Ycenter) ,(corner7[2] < node.Zcenter))
-                if not False in table:
-                    now_investigating.append(node.negXnegYnegZ)
+                    #must remove children that aren't real yet
+                    temp_templist = []
+                    for node in list_list[level+1]:
+                        try:
+                           node.Xcenter  
+                           temp_templist.append(node)
+                        except AttributeError:
+                            pass
+                    list_list[level+1] = temp_templist
+             
+            for i in list_list[-1]:
+                print i.value
+                
+        
 
 
-
-            my_new_investigating = []
-            for node in now_investigating:
-                try:
-                   print node.Xcenter  
-                   my_new_investigating.append(node)
-                except AttributeError:
-                    print "Not adding this one"
-
-
-            print "OHAI"
-            for found in my_new_investigating:
-                print found
 
         
 
