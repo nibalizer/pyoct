@@ -22,7 +22,7 @@ class node():
         self.Zcenter = (self.Zupperlimit + self.Xlowerlimit)/2.
 
     parent = None
-    value = None
+    value = []
     
     #children
     posXposYposZ = None
@@ -254,8 +254,8 @@ class Octree():
         """
         """
         Should support "cube", "sphere", "doughnut"
-        """"
-        if shape == "cube"":
+        """
+        if shape == "cube":
             """
             This deals with things around the center of a node in a box shape
             with a radius of 'size'
@@ -396,49 +396,38 @@ class Octree():
             part of that selection is within the childspace. 
             
             """
-            Xedge_max = self.center[0] + size
-            Xedge_min = self.center[0] - size
-            Yedge_max = self.center[1] + size
-            Yedge_min = self.center[1] - size
-            Zedge_max = self.center[2] + size
-            Zedge_min = self.center[2] - size
-
-            corner1 = (Xedge_max, Yedge_max, Zedge_max)
-            corner2 = (Xedge_max, Yedge_max, Zedge_min)
-            corner3 = (Xedge_max, Yedge_min, Zedge_max)
-            corner4 = (Xedge_max, Yedge_min, Zedge_min)
-            corner5 = (Xedge_min, Yedge_max, Zedge_max)
-            corner6 = (Xedge_min, Yedge_max, Zedge_min)
-            corner7 = (Xedge_min, Yedge_min, Zedge_max)
-            corner8 = (Xedge_min, Yedge_min, Zedge_min)
-            corners = [corner1, corner2, corner3, corner4, corner5, corner6, corner7, corner8]
             
             investigating = []
             for node in [self.root]:
-                table = ((corner1[0] > self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] > self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.posXposYposZ)
-                table = ((corner2[0] > self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] < self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.posXposYnegZ)
-                table = ((corner3[0] > self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] > self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.posXnegYposZ)
-                table = ((corner4[0] > self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] < self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.posXnegYnegZ)
-                table = ((corner5[0] < self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] > self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.negXposYposZ)
-                table = ((corner6[0] < self.root.center[0]),(corner[1] > self.root.center[1]),(corner[2] < self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.negXposYnegZ)
-                table = ((corner7[0] < self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] > self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.negXnegYposZ)
-                table = ((corner8[0] < self.root.center[0]),(corner[1] < self.root.center[1]),(corner[2] < self.root.center[2]))
-                if not False in table:
-                    investigating.append(self.root.negXnegYnegZ)
+                Xedge_max = node.Xcenter + size
+                Xedge_min = node.Xcenter - size
+                Yedge_max = node.Ycenter + size
+                Yedge_min = node.Ycenter - size
+                Zedge_max = node.Zcenter + size
+                Zedge_min = node.Zcenter - size
+
+                corner0 = (Xedge_max, Yedge_max, Zedge_max)
+                corner1 = (Xedge_max, Yedge_max, Zedge_min)
+                corner2 = (Xedge_max, Yedge_min, Zedge_max)
+                corner3 = (Xedge_max, Yedge_min, Zedge_min)
+                corner4 = (Xedge_min, Yedge_max, Zedge_max)
+                corner5 = (Xedge_min, Yedge_max, Zedge_min)
+                corner6 = (Xedge_min, Yedge_min, Zedge_max)
+                corner7 = (Xedge_min, Yedge_min, Zedge_min)
+                corners = [corner0, corner1, corner2, corner3, corner4, corner5, corner6, corner7]
+                for index, corner in enumerate(corners):
+                    table = ((corner[0] > node.Xcenter),(corner[1] > node.Ycenter) ,(corner[2] > node.Zcenter))
+                    if not False in table:
+                        print "foo"
+                        investigating.append(node.get_array_of_children()[index])
+
+
+            for found in investigating:
+                print found
+
+
+
+
 
         
 
@@ -481,6 +470,7 @@ if __name__ == "__main__":
             grandchild = child.get_array_of_children()
         except AttributeError:
             print type(child)
+    tree.find_within_range((0,0,0), 40, "cube")
 
 
 
